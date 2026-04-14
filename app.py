@@ -1,5 +1,5 @@
 # =============================
-# COMPLETE STRUCTURED FLASK APP (AS YOU SPECIFIED)
+# app.py
 # =============================
 
 from flask import Flask, render_template, request, redirect, send_file
@@ -34,21 +34,39 @@ ALLOWED_DAYS = 5
 def process_data(book_file, borrow_file):
     books = pd.read_csv(book_file)
     records = pd.read_csv(borrow_file)
+
     books.columns = books.columns.str.strip()
     records.columns = records.columns.str.strip()
+
     valid_books = set(books['book_id'])
+
     output = []
+    rejected = []   
 
     for _, r in records.iterrows():
+
+    
         if r['book_id'] not in valid_books:
+            rejected.append({
+                'user_id': r['user_id'],
+                'book_id': r['book_id'],
+                'reason': 'Invalid Book ID'
+            })
             continue
 
+    
         try:
             b = datetime.strptime(r['borrow_date'], '%Y-%m-%d')
             ret = datetime.strptime(r['return_date'], '%Y-%m-%d')
         except:
+            rejected.append({
+                'user_id': r['user_id'],
+                'book_id': r['book_id'],
+                'reason': 'Invalid Date'
+            })
             continue
 
+        # VALID RECORD
         days = (ret - b).days
         fine = 0
         late = False
@@ -56,10 +74,12 @@ def process_data(book_file, borrow_file):
         if days > ALLOWED_DAYS:
             fine = (days - ALLOWED_DAYS) * 20
             late = True
+        book_name = books.loc[books['book_id'] == r['book_id'], 'book_name'].values[0]
 
         output.append({
             'user_id': r['user_id'],
             'book_id': r['book_id'],
+            'book_name': book_name,
             'days': days,
             'fine': fine,
             'late': late,
@@ -69,12 +89,18 @@ def process_data(book_file, borrow_file):
         })
 
     df = pd.DataFrame(output)
-    df.to_csv(f'{REPORT}/fine_report.csv', index=False)
+    rejected_df = pd.DataFrame(rejected)   
 
+    df.to_csv(f'{REPORT}/fine_report.csv', index=False)
+    rejected_df.to_csv(f'{REPORT}/rejected.csv', index=False)
     usage = df.groupby('book_id').size().reset_index(name='count')
+    usage = usage.merge(books[['book_id', 'book_name']], on='book_id', how='left')
+
+    usage = usage[['book_id', 'book_name', 'count']]
+
     usage.to_csv(f'{REPORT}/usage.csv', index=False)
 
-    return df, usage
+    return df, usage, rejected_df   
 
 # ------------------ PDF ------------------
 
@@ -131,8 +157,8 @@ def make_pdf(row):
     c.drawString(40, y-120, f"Patron: {row['user_id']}")
     c.drawRightString(width-40, y-120, f"ID No: {row['user_id']}")
 
-    c.drawString(40, y-140, f"Late Title(s): {row['book_name'] if 'book_name' in row else row['book_id']}")
-    c.drawRightString(width-40, y-140, f"Days Late: {row['days']},")
+    c.drawString(40, y-140, f"Book: {row['book_name']} (ID: {row['book_id']})")
+    c.drawRightString(width-40, y-140, f"Days Late: {row['days']}")
 
     c.line(40, y-155, width-40, y-155)
 
@@ -214,7 +240,6 @@ def send_mail(to, pdf, user_id):
     msg['To'] = to
     msg['Subject'] = "Library Fine"
 
-    # ✅ Add proper email body (THIS WAS MISSING)
     body = f"""Dear User {user_id},
 
 Please find attached your library fine receipt.
@@ -224,12 +249,12 @@ Kindly clear any outstanding dues at the earliest to avoid further penalties.
 If you have already made the payment, please disregard this message.
 
 Regards,  
-Library Management System
+Library Administration
 """
 
     msg.attach(MIMEText(body, 'plain'))
 
-    # ✅ Keep your original attachment code
+    
     part = MIMEBase('application', 'octet-stream')
     with open(pdf, 'rb') as f:
         part.set_payload(f.read())
@@ -238,7 +263,7 @@ Library Management System
     part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(pdf)}')
     msg.attach(part)
 
-    # ✅ Send mail (unchanged)
+    # Send mail 
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as s:
         s.login(sender, password)
         s.send_message(msg)
@@ -272,7 +297,7 @@ def results():
     df = pd.read_csv(f'{REPORT}/fine_report.csv')
     usage = pd.read_csv(f'{REPORT}/usage.csv')
 
-    # 🔥 Badge ONLY if fine > 250
+    # Badge ONLY if fine > 250
     def add_badge(row):
         if row['fine'] > 250:
             return f"{row['user_id']} <span class='badge'>HIGH FINE</span>"
@@ -280,13 +305,13 @@ def results():
 
     df['user_id'] = df.apply(add_badge, axis=1)
 
-    # 🔴 Background for ANY fine > 0
+    # highlight entire row if fine > 0
     def highlight_row(row):
         if row['fine'] > 0:
             return ['background-color: #2a1a1a'] * len(row)
         return [''] * len(row)
 
-    # 🔥 Red highlight for user_id + fine (ANY fine > 0)
+    #  highlight for user_id and fine (ANY fine > 0)
     def highlight_cells(row):
         styles = []
         for col in row.index:
@@ -303,6 +328,28 @@ def results():
         'results.html',
         fine=styled_df.to_html(escape=False),
         usage=usage.to_html(classes='table table-dark')
+    )
+
+@app.route('/overview')
+def overview():
+    df = pd.read_csv(f'{REPORT}/fine_report.csv')
+    rejected = pd.read_csv(f'{REPORT}/rejected.csv')
+
+    total_records = len(df) + len(rejected)   #  TOTAL UPLOADED
+    valid_records = len(df)
+    rejected_count = len(rejected)
+    total_fines = df['fine'].sum()
+
+    late = df[df['fine'] > 0]
+
+    return render_template(
+        'overview.html',
+        total=total_records,
+        valid=valid_records,
+        rejected_count=rejected_count,
+        fines=total_fines,
+        late=late.to_html(classes='table'),
+        rejected_table=rejected.to_html(classes='table')
     )
 
 @app.route('/email')
@@ -334,7 +381,7 @@ def send_bulk():
 
     success = 0
     failed = 0
-    errors = []   # ✅ FIX
+    errors = []   
 
     for _, row in pending.iterrows():
         try:

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Overview</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>📚 Library</h2>
+
+    <a href="/">🏠 Home</a>
+    <a href="/upload">📤 Upload Data</a>
+    <a href="/overview">📈 Overview</a>
+    <a href="/results">📊 Results</a>
+    <a href="/email">📧 Email Users</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <div class="navbar">
+        <h1>📈 Overview</h1>
+    </div>
+
+    <div class="content">
+
+        <!-- ✅ CARDS -->
+        <div class="cards">
+
+            <div class="card stat-card">
+                <p>Total Records</p>
+                <h1>{{ total }}</h1>
+            </div>
+
+            <div class="card stat-card">
+                <p>Valid Records</p>
+                <h1>{{ valid }}</h1>
+            </div>
+
+            <div class="card stat-card">
+                <p>Rejected Records</p>
+                <h1>{{ rejected_count }}</h1>
+            </div>
+
+            <div class="card stat-card">
+                <p>Total Fines (Rs.)</p>
+                <h1>{{ "%.2f"|format(fines) }}</h1>
+            </div>
+
+        </div>
+
+        <!-- ✅ TABLES SIDE BY SIDE -->
+        <div class="grid-2">
+
+            <!-- LATE RETURNS -->
+            <div class="card">
+                <h2>Late Returns</h2>
+                <div class="table-wrapper">
+                    {{ late|safe }}
+                </div>
+            </div>
+
+            <!-- REJECTED RECORDS -->
+            <div class="card">
+                <h2>Rejected Records</h2>
+                <div class="table-wrapper">
+                    {{ rejected_table|safe }}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Fine Slip Generator</h2>
+
+<select id="userSelect" onchange="showSlip()">
+    <option>Select User</option>
+    {% for row in data %}
+    <option value="{{ loop.index0 }}">{{ row.user_id }}</option>
+    {% endfor %}
+</select>
+
+<div id="preview"></div>
+
+<script>
+const data = JSON.parse('{{ data|tojson|safe }}');
+
+function showSlip() {
+    let i = document.getElementById("userSelect").value;
+    let r = data[i];
+
+    document.getElementById("preview").innerHTML = `
+        <h3>Receipt Preview</h3>
+        Record ID: ${i}<br>
+        User ID: ${r.user_id}<br>
+        Book ID: ${r.book_id}<br>
+        Borrow Date: ${r.borrow_date}<br>
+        Return Date: ${r.return_date}<br>
+        Days Late: ${r.days}<br>
+        Fine: Rs.${r.fine}
+    `;
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,196 @@
+/* ================= GLOBAL ================= */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #e6e6e6;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #020617;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    color: #f5e6ca;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px;
+    margin: 10px 0;
+    text-decoration: none;
+     color: #eab308;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: #1e293b;
+}
+
+/* ================= MAIN ================= */
+.main {
+    margin-left: 250px;
+    padding: 30px;
+    overflow-x: auto;   /* ✅ IMPORTANT */
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+    background: #020617;
+    padding: 15px;
+    border-bottom: 1px solid #1e293b;
+}
+
+/* ================= CONTENT ================= */
+.content {
+    padding: 20px;
+}
+
+/* ================= CARDS ================= */
+.card {
+    background: #1e293b;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+/* ================= BUTTONS ================= */
+.btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.btn-primary { background: #3b82f6; color: white; }
+.btn-danger { background: #ef4444; color: white; }
+.btn-success { background: #3b82f6; color: white; }
+.btn-print { background: #10b981; color: white; }
+
+.btn:hover {
+    opacity: 0.85;
+}
+
+/* ================= INPUTS ================= */
+input {
+    width: 90%;
+    padding: 6px;
+    margin: 4px 0;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    box-sizing: border-box;   
+}
+
+/* ================= TABLE FIX (IMPORTANT) ================= */
+
+/* Wrapper prevents overflow */
+.table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 400px;
+    border-radius: 10px;
+    width: 100%;  
+    padding: 10px;          /* ✅ ADD THIS */
+}
+.table-header {
+    display: flex;
+    justify-content: space-between;  /* pushes button to right */
+    align-items: center;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container {
+    margin-bottom: 30px;   /* 🔥 space between tables */
+}
+
+/* Borders */
+table, th, td {
+    border: 1px solid #334155;
+}
+
+/* Header */
+th {
+    background: #020617;
+    color: #eab308;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Cells */
+td, th {
+    padding: 10px;
+    text-align: center;
+}
+
+/* Row colors */
+tr:nth-child(even) {
+    background: #0f172a;
+}
+
+tr:nth-child(odd) {
+    background: #020617;
+}
+
+/* Hover */
+tr:hover {
+    background: #1e293b;
+}
+
+/* ================= LOGIN BACKGROUND ================= */
+.bg-library {
+    background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+/* Center login */
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.badge {
+    background: #ef4444;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-left: 6px;
+}
+/* ================= RESPONSIVE ================= */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main {
+        margin-left: 210px;
+    }
+
+    table {
+        min-width: 600px;
+    }
+}

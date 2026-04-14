@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>📚 Library</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/books">Books Catalog</a>
+    <a href="/records">Borrow Records</a>
+    <a href="/fine-report">Fine Report</a>
+    <a href="/usage">Book Usage</a>
+    <a href="/slips">Fine Slips</a>
+    <a href="/email">Send Emails</a>
+</div>
+
+<div class="main">
+    <div class="navbar">
+        <h1>Library Management System</h1>
+    </div>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

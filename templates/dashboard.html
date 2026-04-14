@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body {
+  background-color: #121212;
+  color: white;
+}
+.card {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+}
+</style>
+</head>
+<body class="container mt-5">
+
+<h2>📊 Dashboard</h2>
+
+<div class="card mb-4">
+  <h4>Upload CSV Files</h4>
+  <form method="POST" enctype="multipart/form-data">
+    <input type="file" name="books" required class="form-control mb-2">
+    <input type="file" name="records" required class="form-control mb-2">
+    <button class="btn btn-primary">Process Data</button>
+  </form>
+</div>
+
+{% if table %}
+<div class="card mb-4">
+  <h4>Fine Report</h4>
+  {{ table|safe }}
+</div>
+
+<div class="card">
+  <h4>Send Fine Receipt</h4>
+  <form method="POST" action="/send">
+    <input name="user_id" placeholder="Enter User ID" class="form-control mb-2" required>
+    <input name="email" placeholder="Enter Email" class="form-control mb-2" required>
+    <button class="btn btn-danger">Send PDF Receipt</button>
+  </form>
+</div>
+{% endif %}
+
+
+
+</body>
+</html>

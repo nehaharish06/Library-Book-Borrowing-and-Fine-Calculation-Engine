@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- ✅ SIDEBAR -->
+<div class="sidebar">
+    <h2>📚 Library</h2>
+
+    <a href="/">🏠 Home</a>
+    <a href="/upload">📤 Upload Data</a>
+    <a href="/results">📊 Results</a>
+    <a href="/email">📧 Email Users</a>
+</div>
+
+<!-- ✅ MAIN CONTENT -->
+<div class="main">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h3>📊 Dashboard</h3>
+    </div>
+
+    <div class="content">
+
+        <!-- ================= FINE REPORT ================= -->
+        <div class="table-container">
+
+            <div class="table-header">
+                <h2>Fine Report</h2>
+                <a href="/download/fine_report.csv">
+                    <button class="btn btn-success">Download</button>
+                </a>
+            </div>
+
+            <div class="table-wrapper">
+                {{ fine|safe }}
+            </div>
+        </div>
+
+        <!-- ================= USAGE REPORT ================= -->
+        <div class="table-container">
+
+            <div class="table-header">
+                <h2>Book Usage</h2>
+                <a href="/download/usage.csv">
+                    <button class="btn btn-primary">Download</button>
+                </a>
+            </div>
+
+            <div class="table-wrapper">
+                {{ usage|safe }}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

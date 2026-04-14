@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Users</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body>
+
+<div style="padding:40px;">
+    <h2>📧 Pending Fine Users</h2>
+
+    <!-- ✅ BULK BUTTON (JS CONTROLLED) -->
+    <div style="margin-bottom:20px;">
+        <button onclick="sendBulk()" class="btn btn-primary" style="padding:10px;">
+            🚀 Send Bulk Emails
+        </button>
+    </div>
+
+    <div class="card">
+        <table>
+            <tr>
+                <th>User ID</th>
+                <th>Book ID</th>
+                <th>Fine</th>
+                <th>Email</th>
+                <th>Send</th>
+                <th>PDF</th>
+            </tr>
+
+            {% for row in data %}
+            <tr>
+                <td>{{ row.user_id }}</td>
+                <td>{{ row.book_id }}</td>
+                <td>Rs. {{ row.fine }}</td>
+
+                <!-- ✅ EMAIL INPUT -->
+                <td>
+                    <input id="email_{{row.user_id}}" value="{{ row.email }}">
+                </td>
+
+                <!-- ✅ JS SEND BUTTON -->
+                <td>
+                    <button 
+                    class="btn btn-danger"
+                    onclick="sendMail('{{ row.user_id }}')">
+                    Send
+                    </button>
+                </td>
+
+                <!-- ✅ PDF DOWNLOAD -->
+                <td>
+                    <a href="/download/receipt_{{row.user_id}}.pdf">
+                        <button type="button" class="btn btn-primary">Download</button>
+                    </a>
+                    <!-- PRINT -->
+                    <button 
+                    type="button" 
+                    class="btn btn-print"
+                    onclick="printPDF('{{row.user_id}}')">
+                    🖨 Print
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

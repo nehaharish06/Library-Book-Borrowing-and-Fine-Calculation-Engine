@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container" style="padding:40px;">
+    <h2>📂 Upload CSV Files</h2>
+
+    <div class="card">
+
+        <h2>📤 Upload Data</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <!-- BOOKS FILE -->
+            <div class="form-group">
+                <label>📚 Upload Books CSV</label>
+                <input type="file" name="books" required>
+            </div>
+
+            <!-- BORROW RECORD FILE -->
+            <div class="form-group">
+                <label>📄 Upload Borrow Records CSV</label>
+                <input type="file" name="records" required>
+            </div>
+
+            <!-- BUTTON -->
+            <button class="btn btn-success">Upload & Process</button>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

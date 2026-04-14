@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Library Fine System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+<h2>Upload CSV Files</h2>
+<form action="/upload" method="post" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label>Books CSV</label>
+    <input type="file" name="books" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label>Borrow Records CSV</label>
+    <input type="file" name="records" class="form-control" required>
+  </div>
+  <button class="btn btn-primary">Process</button>
+</form>
+</body>
+</html>
+
